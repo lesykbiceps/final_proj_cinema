@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<h3 style="margin-top:50px;"></h3>
+<div class="container marketing">
+        <div class="row featurette">
+        <div class="col-md-6 order-md-2">
+        <h3 class="featurette-heading">Oh yeah, it’s that good. <span class="text-muted">{{ film[0]['name'] }}</span></h3>
+            <h5>Genre: {{ film[0]['genre'] }}</h5>
+            <h5>Director: {{ film[0]['direcor'] }}</h5>
+            <h5>Rating: {{ film[0]['rating'] }}</h5>
+        </div>
+        <div class="col-md-4 order-md-1">
+            <img src="{{ film[0]['image'] }}" width="300" height="370" alt="..." class="rounded">
+        </div>
+        </div>
+
+    <hr class="featurette-divider">
+    <div class="text-center">
+         <img src="{{ url_for('static', filename='images/seating_plan.png') }}" class="img-fluid" alt="Responsive image"
+         width="750" height="700">
+         <h5>Available seats: {{ available_seats }}</h5>
+         <form method="POST" style="color:black">
+            {{ form.hidden_tag() }} <!--To protect against hacker attacks-->
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please, choose a place
+            </h1>
+            <br>
+
+            {{ form.seat.label() }}
+            {{ form.seat(class="form-control", placeholder="Your seat") }}
+
+            <br>
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+    <div class="col-md-5 p-lg-5 mx-auto my-5">
+      <h1 class="display-4 fw-normal">UkraineCinema</h1>
+      <p class="lead fw-normal">Cinema is much more than the intersection of art and technology.
+          It is also, and maybe more importantly, a powerful medium of communication.
+          Like language itself, cinema is a surrounding and enveloping substance that carries
+          with it what it means to be human in a specific time and place.</p>
+      <a class="btn btn-outline-secondary" href="">Coming soon</a>
+    </div>
+    <div class="product-device shadow-sm d-none d-md-block"></div>
+    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+  </div>
+<div class="row align-items-md-stretch">
+      <div class="col-md-6 w-100">
+        <img src="{{ url_for('static', filename='images/hall.jpg') }}" class="rounded float-right" alt="Responsive image"
+        height="700" width="800">
+      </div>
+      <div class="col-md-6">
+        <div class="h-100 p-5 bg-light border rounded-3">
+          <h2>About us</h2>
+          <p>We are looking forward to see you at our sessions.
+              On our website you can buy a ticket online without getting out of bed. You can also view information about
+              movies, screenings, schedule. We have opened to give people the pleasure of watching movies.
+              At the premieres of the expected films, we organize events for our guests and set themed photo zones.</p>
+
+          <p>Our IMAX technology comes from Canada. The screen has a five-story house, 2 powerful projectors, loud sound,
+              clear picture. Standard equipment and patented hall geometry in all IMAX halls in the world
+              so the image and sound of each film are specially adjusted to the IMAX hall.</p>
+
+          <p>So, if you want to watch a movie with full immersion and enjoy it - then you should come to us. Welcome!</p>
+            <a href="{{ url_for('cinema.schedule') }}" class="btn btn-secondary btn-lg active" role="button"
+               aria-pressed="true">Go to schedules</a>
+        </div>
+      </div>
+    </div>
+
+<main class="container">
+    <!-- 16:9 aspect ratio -->
+  <div class="bg-white p-5 rounded">
+    <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/PST3OtuPJew" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</main>
+
+{% endblock %}

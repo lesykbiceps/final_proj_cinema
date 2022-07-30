@@ -1,0 +1,942 @@
+openapi: 3.0.0
+servers:
+  - url: http://127.0.0.1:8000
+tags:
+  - name: Authentication
+    description: Authentication page
+  - name: Halls
+    description: Hall page
+  - name: Films
+    description: Film page
+  - name: Sessions
+    description: Session page
+  - name: Users
+    description: User page
+  - name: Tickets
+    description: Ticket page
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Log in into system
+      requestBody:
+        required: true
+        description: New token
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/LogIn'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Logged in as {current_user_.username}
+                access_token: {access_token}
+                refresh_token: {refresh_token}
+        '401':
+           description: Bad Input
+           content:
+             application/json:
+               example:
+                 message: Wrong password
+  /auth/registration:
+    post:
+      tags:
+        - Authentication
+      summary: Registration into system
+      requestBody:
+        required: true
+        description: New user
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Register'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: User {username} was created
+                access_token: {access_token}
+                refresh_token: {refresh_token}
+                'groups': groups
+        '400':
+          description: Bad input
+          content:
+            application/json:
+              example:
+                message: User {username} already exists
+        '500':
+           description: Error while register
+           content:
+             application/json:
+               example:
+                 message: Something went wrong
+  /auth/refresh:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Authentication
+      summary: Refresh access token
+      requestBody:
+        required: false
+        description: New access token
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Refresh'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                access_token: {access_token}
+                'groups': groups
+        '400':
+           description: Error while refresh
+           content:
+             application/json:
+               example:
+                 message: User {username} doesn't exist
+  /auth/change-password:
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Authentication
+      summary: Change password
+      requestBody:
+        required: true
+        description: New password
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/Change_password'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Password changed successfully
+        '400':
+          description: Bad input
+          content:
+            application/json:
+              example:
+                message: Incorrect password
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              example:
+                message: User not found.
+  /halls:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Halls
+      summary: Returns all halls in the cinema
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/HallsOut'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Halls
+      summary: Create new hall
+      requestBody:
+        required: true
+        description: New hall info
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/HallIn'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Input
+          content:
+            application/json:
+              example:
+                message: Please, specify "name" and "capacity".
+  /halls/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Halls
+      parameters:
+        - name: id
+          in: path
+          description: id of the hall
+          required: true
+      summary: Get one hall by id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HallOut'
+        '404':
+          description: Hall Not Found
+          content:
+            application/json:
+              example:
+                message: Hall not found.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Halls
+      summary: Updates hall's info
+      parameters:
+        - name: id
+          in: path
+          description: id of the hall
+          required: true
+      requestBody:
+        required: true
+        description: Hall's updated info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HallIn'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Updated.
+        '404':
+          description: Hall Not Found
+          content:
+            application/json:
+              example:
+                message: Hall not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Halls
+      summary: Remove hall by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the hall
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Hall was successfully deleted.
+        '404':
+          description: Hall Not Found
+          content:
+            application/json:
+              example:
+                message: Hall not found.
+  /films:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Films
+      summary: Returns all films in the cinema
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/FilmsOut'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Films
+      summary: Create new film
+      requestBody:
+        required: true
+        description: New film info
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/FilmIn'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Input
+          content:
+            application/json:
+              example:
+                message: Please, specify "name", "genre", "director", "image" and "rating".
+  /films/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Films
+      parameters:
+        - name: id
+          in: path
+          description: id of the film
+          required: true
+      summary: Get one film by id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilmOut'
+        '404':
+          description: Film Not Found
+          content:
+            application/json:
+              example:
+                message: Film not found.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Films
+      summary: Updates film's info
+      parameters:
+        - name: id
+          in: path
+          description: id of the film
+          required: true
+      requestBody:
+        required: true
+        description: Film's updated info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilmIn'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Updated
+        '404':
+          description: Film Not Found
+          content:
+            application/json:
+              example:
+                message: Film not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Films
+      summary: Remove film by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the film
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Film was successfully deleted.
+        '404':
+          description: Film Not Found
+          content:
+            application/json:
+              example:
+                message: Film not found.
+  /sessions:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Sessions
+      summary: Returns all sessions in the cinema
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/SessionsOut'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Sessions
+      summary: Create new session
+      requestBody:
+        required: true
+        description: New session info
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/SessionIn'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              example:
+                id: sess.id
+                started_at: sess.started_at
+                film_id: sess.film_id
+        '400':
+          description: Bad Input
+          content:
+            application/json:
+              example:
+                message: Please, specify "film_id", "hall_id", "number_seats" and "started_at".
+  /sessions/{id}:
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Sessions
+      summary: Remove session by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the session
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Session was successfully deleted.
+        '404':
+          description: Session Not Found
+          content:
+            application/json:
+              example:
+                message: Session not found.
+  /users:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Returns all users in the cinema
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/UsersOut'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Create new user
+      requestBody:
+        required: true
+        description: New user info
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/UserIn'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Input
+          content:
+            application/json:
+              example:
+                message: Please, specify "username", "name","email", "password" and "age".
+  /users/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          description: id of the user
+          required: true
+      summary: Get one user by id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOut'
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              example:
+                message: User not found.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Updates user's info
+      parameters:
+        - name: id
+          in: path
+          description: id of the user
+          required: true
+      requestBody:
+        required: true
+        description: User's updated info
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIn'
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: Updated
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              example:
+                message: User not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Remove user by id
+      parameters:
+        - name: id
+          in: path
+          description: id of the user
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                message: User was successfully deleted.
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              example:
+                message: User not found.
+  /tickets:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      summary: Returns all tickets that were purchased at this cinema
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/TicketsOut'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      summary: Buy a ticket
+      requestBody:
+        required: true
+        description: New ticket info
+        content:
+          application/json:
+            schema:
+              $ref: '#components/schemas/TicketIn'
+      responses:
+        '201':
+          description: Successful Operation
+          content:
+            application/json:
+              example:
+                id: "{ticket.id}"
+                seat: "{ticket.seat}"
+        '200':
+          description: The wrong place was chosen
+          content:
+            application/json:
+              example:
+                message: 'Please, choose another seat.'
+        '400':
+          description: Bad Input
+          content:
+            application/json:
+              example:
+                message: Please, specify "seat", "user_id" and "session_id".
+  /mytickets:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      summary: Returns all tickets that were purchased by the selected user
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/TicketsOut'
+  /free_seats/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      parameters:
+        - name: id
+          in: path
+          description: id of the session
+          required: true
+      summary: Get available seats for session by id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Available_seats'
+        '400':
+          description: Bad input
+          content:
+            application/json:
+              example:
+                message: Such session not exist. Please,try another one
+        '404':
+          description: Session Not Found
+          content:
+            application/json:
+              example:
+                message: Session not found.
+  /tickets/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      parameters:
+        - name: id
+          in: path
+          description: id of the session
+          required: true
+      summary: Get  tickets by session id
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tickets_by_sess'
+        '400':
+          description: Bad input
+          content:
+            application/json:
+              example:
+                message: Tickets not found.
+        '404':
+          description: Session Not Found
+          content:
+            application/json:
+              example:
+                message: Tickets not found.
+  /sold_tickets/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Tickets
+      parameters:
+        - name: id
+          in: path
+          description: id of the film
+          required: true
+      summary: Get  number of tickets that were sold for a particular movie
+      responses:
+        '200':
+          description: Successful Operation
+          content:
+            application/json:
+              application/json:
+                example:
+                  message: Sold tickets for this film {result}
+        '404':
+          description: Bad input
+          content:
+            application/json:
+              example:
+                message: Tickets not found.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LogIn:
+      type: object
+      properties:
+        username:
+          type: string
+          example: test
+        password:
+          type: string
+          example: test
+    Register:
+      type: object
+      properties:
+        name:
+          type: string
+          example: test1
+        age:
+          type: int
+          example: 25
+        username:
+          type: string
+          example: test1
+        password:
+          type: string
+          example: test1
+        email:
+          type: string
+          example: test1
+        is_admin:
+          type: bool
+          example: true
+    Refresh:
+      type: array
+      content:
+        application/json:
+          example:
+            refresh_token: {refresh_token}
+    Change_password:
+      type: object
+      properties:
+        email:
+          type: string
+          example: test
+        password:
+          type: string
+          example: test
+        new_password:
+          type: string
+          example: testnew
+    HallIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: IMAX
+        capacity:
+          type: integer
+          example: 75
+    HallOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: IMAX
+        capacity:
+          type: integer
+          example: 75
+    HallsOut:
+      type: array
+      items:
+        $ref: '#components/schemas/HallOut'
+    FilmIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Spiderman
+        genre:
+          type: string
+          example: superhero
+        director:
+          type: string
+          example: Sam Raimi
+        rating:
+          type: float
+          example: 9.5
+        image:
+          type: string
+          example: https://pics.filmaffinity.com/Spider_Man_No_Way_Home-771942059-large.jpg
+    FilmOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: Spiderman
+        genre:
+          type: string
+          example: superhero
+        director:
+          type: string
+          example: Sam Raimi
+        rating:
+          type: float
+          example: 9.5
+        image:
+          type: string
+          example: https://pics.filmaffinity.com/Spider_Man_No_Way_Home-771942059-large.jpg
+    FilmsOut:
+      type: array
+      items:
+        $ref: '#components/schemas/FilmOut'
+    SessionIn:
+      type: object
+      properties:
+        film_id:
+          type: integer
+          example: 1
+        hall_id:
+          type: integer
+          example: 1
+        started_at:
+          type: string
+          example: '2022-06-01 21:00:00'
+    SessionOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 4
+        film_id:
+          type: integer
+          example: 1
+        hall_id:
+          type: integer
+          example: 1
+        started_at:
+          type: string
+          example: '2022-06-01 21:00:00'
+    SessionsOut:
+      type: array
+      items:
+        $ref: '#components/schemas/SessionOut'
+    UserIn:
+      type: object
+      properties:
+        name:
+          type: string
+          example: testuser
+        age:
+          type: integer
+          example: 30
+        username:
+          type: string
+          example: testuser
+        password:
+          type: string
+          example: testuser
+        email:
+          type: string
+          example: testuser
+        is_admin:
+          type: bool
+          example: false
+    UserOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: testuser
+          age:
+            type: integer
+            example: 30
+          username:
+            type: string
+            example: testuser
+          password:
+            type: string
+            example: testuser
+          email:
+            type: string
+            example: testuser
+          is_admin:
+            type: bool
+            example: false
+    UsersOut:
+      type: array
+      items:
+        $ref: '#components/schemas/UserOut'
+    TicketIn:
+      type: object
+      properties:
+        seat:
+          type: integer
+          example: 73
+        user_id:
+          type: integer
+          example: 1
+        session_id:
+          type: integer
+          example: 1
+    TicketOut:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        seat:
+          type: integer
+          example: 50
+        user_id:
+          type: integer
+          example: 1
+        session_id:
+          type: integer
+          example: 1
+    TicketsOut:
+      type: array
+      items:
+        $ref: '#components/schemas/TicketOut'
+    Available_seats:
+      type: array
+      items:
+        type: integer
+        example: 1,2,3,4,5,6,7,8,9,10
+    Tickets_by_sess:
+      type: array
+      items:
+        $ref: '#components/schemas/TicketOut'

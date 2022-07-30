@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<hr class="featurette-divider">
+<div class="container">
+    <p>Page not found, return on <a href="{{url_for('cinema.index')}}">main</a> page</p>
+</div>
+{% endblock %}

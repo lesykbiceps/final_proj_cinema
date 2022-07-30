@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+
+<h3 style="margin-top:20px;">My tickets:</h3>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Greetings!</strong>With a standard subscription, you can see the history of only the last ten purchases.
+    To remove this restriction you need to buy a premium subscription.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+     <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <!-- Your Columns HERE -->
+                    <th scope="col">ID</th>
+                    <th scope="col">ViewerID</th>
+                    <th scope="col">SessionID</th>
+                    <th scope="col">Seat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Your rows inside the table HERE: -->
+                {% for item in tickets %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.user_id }}</td>
+                        <td>{{ item.session_id }}</td>
+                        <td>{{ item.seat }}</td>
+                        <td>
+                            <button class="btn btn-outline btn-info">More Info</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}

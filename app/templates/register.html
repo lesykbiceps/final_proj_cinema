@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" style="color:black">
+            {{ form.hidden_tag() }} <!--To protect against hacker attacks-->
+            <img class="mb-4 mt-4" src="{{ url_for('static', filename='images/test_logo.png') }}" alt="">
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please Create your Account
+            </h1>
+            <br>
+            {{ form.name.label() }}
+            {{ form.name(class="form-control", placeholder="Your Name") }}
+
+            {{ form.age.label() }}
+            {{ form.age(class="form-control", placeholder="Age") }}
+
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="Username") }}
+
+            {{ form.email.label() }}
+            {{ form.email(class="form-control", placeholder="Email Address") }}
+
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control", placeholder="Password") }}
+
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+
+            {{ form.hidden_tag() }}
+            {{ form.checkbox() }}
+            <br>
+
+            <div class="checkbox mb-3">
+               <h6>Already have an account?</h6>
+               <a class="btn btn-sm btn-secondary" href="{{ url_for('cinema.login_page') }}">Login</a>
+            </div>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+        </form>
+    </div>
+</body>
+{% endblock %}

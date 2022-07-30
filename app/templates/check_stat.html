@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+
+{% block content %}
+<hr class="featurette-divider">
+<a href="{{ url_for('cinema.get_my_tickets',id_=id_) }}" class="btn btn-primary btn-lg active" role="button"
+   aria-pressed="true">View my tickets</a>
+{% endblock %}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/cinema_icon.jpg') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+    <title>{% block title %} {% endblock %}</title>
+    <link href="{{ url_for('static', filename='css/carousel.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="preloader"></div>
+
+    <!-- Navbar start -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a title="Icons8, MIT &lt;http://opensource.org/licenses/mit-license.php&gt;, via Wikimedia Commons" href="{{ url_for('cinema.index') }}"><img width="64" height="54" alt="Icons8 flat clapperboard" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Icons8_flat_clapperboard.svg/128px-Icons8_flat_clapperboard.svg.png"></a>
+      <a class="navbar-brand" href="{{ url_for('cinema.index') }}">UkraineCinema</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('cinema.index') }}">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('cinema.schedule') }}">Schedule </a>
+            </li>
+
+            <div class="btn-group">
+              <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                About&Tickets
+              </button>
+              <div class="dropdown-menu">
+                 <li><a class="dropdown-item" href="{{ url_for('cinema.about_page') }}">About</a></li>
+                 <li><a class="dropdown-item" href="{{ url_for('cinema.check_my_tickets') }}">MyTickets</a></li>
+              </div>
+            </div>
+
+        </ul>
+          {% if current_user.is_authenticated %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link">Welcome, {{current_user.username }} </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('cinema.logout_page') }}">Logout</a>
+                </li>
+            </ul>
+          {% else %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('cinema.login_page') }}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('cinema.register_page') }}">Register</a>
+                </li>
+            </ul>
+          {% endif %}
+      </div>
+    </nav>
+    <!-- Navbar end -->
+
+    <!-- Flashed msg -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} " style="margin-top:15px;">
+                    <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times</span>
+                    </button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<h3 style="margin-top:20px;"></h3>
+{% block content %} {% endblock %}
+    <!-- Flashed msg -->
+
+
+    <!--Footer-->
+ <footer class="py-0 my-0 ">
+    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+            <!--To create line-->
+     </ul>
+
+     <a href="{{ url_for('cinema.author_page') }}" class="nav-link px-2 text-center text-muted">© 2022 Oleksandr Sokyrka, Developer</a>
+
+ </footer>
+
+    <!--Footer-end-->
+
+    <!--Scripts-->
+<script>
+    var loader = document.getElementById("preloader");
+    window.addEventListener("load", function(){
+        loader.style.display = "none";
+    })
+</script>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://getbootstrap.com/docs/5.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

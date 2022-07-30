@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{title}}
+{% endblock %}
+{% block content %}
+<h3 style="margin-top:40px;"></h3>
+<div class="container-fluid">
+     <table id="data" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <!-- Your Columns HERE -->
+                    <th>ID</th>
+                    <th>Started at</th>
+                    <th>HallID</th>
+                    <th>Film name</th>
+                    <th>Genre</th>
+                    <th>Director</th>
+                    <th>Seats available</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Your rows inside the table HERE: -->
+                {% for item in sess_list %}
+                    <tr>
+                        <td>{{ item['sess_id'] }}</td>
+                        <td>{{ item['started_at'] }}</td>
+                        <td>{{ item['hall_id'] }}</td>
+                        <td>{{ item['name'] }}</td>
+                        <td>{{ item['genre'] }}</td>
+                        <td>{{ item['director'] }}</td>
+                        <td>{{ item['number_seats'] }}</td>
+                        <td>
+                            <a href="{{ url_for('cinema.buy_ticket', id_=item.sess_id) }}" class="btn btn-outline btn-success"
+                               role="button">Purchase ticket</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
+</div>
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        columns: [
+          null,
+          {searchable: true},
+          {orderable: false, searchable: false},
+          {orderable: false, searchable: true},
+          {orderable: false,searchable: true},
+          {orderable: false,searchable: true},
+          {orderable: false,searchable: false},
+          {orderable: false, searchable: false}],
+          });
+    });
+ </script>
+{% endblock %}
