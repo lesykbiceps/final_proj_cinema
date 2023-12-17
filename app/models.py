@@ -231,7 +231,7 @@ class FilmModel(base):
     name = Column(String(30), nullable=False)
     genre = Column(String(30), nullable=False)
     director = Column(String(30), nullable=False)
-    image = Column(String(30), nullable=False)
+    image = Column(String(200), nullable=False)
     rating = Column(Float, nullable=False)
     sessions = relationship(SessionModel, lazy='dynamic',
                             cascade="all, delete-orphan",
